@@ -26,20 +26,20 @@ DONE Build Employee Dashboard
 DONE Build Manager Dashboard
 DONE Build Admin Dashboard
 DONE Build Goal Management pages (list, detail, create/edit form)
- Build Goal Hierarchy view (Company → Team → Individual)
- Build Weightage validation UI
- Build Approval workflow UI
- Build Feedback & Review forms
- Build Flag system UI & Admin flag review panel
- Build Probation tracking timeline
- Build Review Cycles page
- Build Notifications dropdown
- Build Admin Controls panels
- Build Analytics & Reporting page with charts
- Implement edge case UX states
+DONE Build Goal Hierarchy view (Company → Team → Individual)
+DONE Build Weightage validation UI
+DONE Build Approval workflow UI
+DONE Build Feedback & Review forms
+DONE Build Flag system UI & Admin flag review panel
+DONE Build Probation tracking timeline
+DONE Build Review Cycles page
+DONE Build Notifications dropdown
+DONE Build Admin Controls panels
+DONE Build Analytics & Reporting page with charts
+DONE Implement edge case UX states
 
 Verification
 
- Backend: Run Django tests
- Frontend: Dev server starts without errors
- Browser testing: Login, dashboards, goal CRUD, approvals
+DONE Backend: Run Django tests
+DONE Frontend: Dev server starts without errors
+DONE Browser testing: Login, dashboards, goal CRUD, approvals
