@@ -18,6 +18,13 @@ router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'audit', AuditLogViewSet)
 router.register(r'admin-config', AdminConfigViewSet)
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 urlpatterns = [
     path('', include(router.urls)),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
