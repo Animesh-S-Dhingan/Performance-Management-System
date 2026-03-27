@@ -1,0 +1,43 @@
+nohup: ignoring input
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 28, 2026 - 00:51:17
+Django version 4.2.20, using settings 'gms.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+[28/Mar/2026 00:54:07] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
+[28/Mar/2026 00:54:07] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
+[28/Mar/2026 00:54:07] "GET /api/v1/goals/1/ HTTP/1.1" 200 484
+[28/Mar/2026 00:54:07] "GET /api/v1/goals/1/ HTTP/1.1" 200 484
+Bad Request: /api/v1/goals/1/comments/
+[28/Mar/2026 00:54:15] "POST /api/v1/goals/1/comments/ HTTP/1.1" 400 36
+[28/Mar/2026 00:54:24] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 52
+[28/Mar/2026 00:54:24] "GET /api/v1/goals/1/ HTTP/1.1" 200 484
+[28/Mar/2026 00:54:28] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 53
+[28/Mar/2026 00:54:28] "GET /api/v1/goals/1/ HTTP/1.1" 200 485
+[28/Mar/2026 00:54:39] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 53
+[28/Mar/2026 00:54:39] "GET /api/v1/goals/1/ HTTP/1.1" 200 485
+[28/Mar/2026 00:54:47] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:54:47] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:55:55] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:55:55] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:56:29] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:56:29] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:56:31] "GET /api/v1/goals/?status=draft HTTP/1.1" 200 537
+[28/Mar/2026 00:56:32] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 537
+[28/Mar/2026 00:56:33] "GET /api/v1/goals/?status=active HTTP/1.1" 200 537
+[28/Mar/2026 00:56:33] "GET /api/v1/goals/?status=completed HTTP/1.1" 200 537
+[28/Mar/2026 00:56:34] "GET /api/v1/goals/?status=rejected HTTP/1.1" 200 537
+[28/Mar/2026 00:56:36] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:56:38] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:56:38] "GET /api/v1/goals/ HTTP/1.1" 200 537
+[28/Mar/2026 00:57:21] "POST /api/v1/goals/ HTTP/1.1" 201 464
+[28/Mar/2026 00:57:22] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
+[28/Mar/2026 00:57:22] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
+[28/Mar/2026 00:57:22] "GET /api/v1/goals/ HTTP/1.1" 200 1002
+[28/Mar/2026 00:57:22] "GET /api/v1/goals/ HTTP/1.1" 200 1002
+[28/Mar/2026 00:57:25] "GET /api/v1/goals/2/ HTTP/1.1" 200 464
+[28/Mar/2026 00:57:25] "GET /api/v1/goals/2/ HTTP/1.1" 200 464

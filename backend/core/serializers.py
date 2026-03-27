@@ -58,6 +58,8 @@ class EvaluationRatingSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'evaluator')
 
 class GoalSerializer(serializers.ModelSerializer):
+    assigned_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    evaluator = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
     assigned_to_name = serializers.ReadOnlyField(source='assigned_to.get_full_name')
     evaluator_name = serializers.ReadOnlyField(source='evaluator.get_full_name')
     comments = GoalCommentSerializer(many=True, read_only=True)

@@ -56,7 +56,11 @@ class GoalViewSet(viewsets.ModelViewSet):
         return Goal.objects.filter(assigned_to=user) | Goal.objects.filter(evaluator=user) | Goal.objects.filter(assigned_to__evaluator=user)
 
     def perform_create(self, serializer):
-        serializer.save(assigned_to=self.request.user)
+        # Default to current user if not provided (e.g., employee creating own goal)
+        assigned_to = serializer.validated_data.get('assigned_to', self.request.user)
+        # Default to user's evaluator if not provided
+        evaluator = serializer.validated_data.get('evaluator', assigned_to.evaluator)
+        serializer.save(assigned_to=assigned_to, evaluator=evaluator)
 
     @decorators.action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def submit(self, request, pk=None):
@@ -111,6 +115,34 @@ class GoalViewSet(viewsets.ModelViewSet):
             related_goal=goal
         )
         return Response({'status': 'Goal rejected'})
+
+    @decorators.action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def comments(self, request, pk=None):
+        goal = self.get_object()
+        serializer = GoalCommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(goal=goal, user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @decorators.action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def progress(self, request, pk=None):
+        goal = self.get_object()
+        # Only owner can update progress
+        if goal.assigned_to != request.user:
+            return Response({'error': 'Only the goal owner can update progress.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        target_completion = request.data.get('target_completion')
+        if target_completion is None:
+            return Response({'error': 'target_completion is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            goal.target_completion = int(target_completion)
+            goal.save()
+        except ValueError:
+            return Response({'error': 'Invalid target_completion value.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response({'status': 'Progress updated', 'target_completion': goal.target_completion})
 
 class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
