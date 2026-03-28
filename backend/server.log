@@ -130,3 +130,11 @@ Forbidden: /api/v1/goals/7/approve/
 [28/Mar/2026 11:45:03] "GET /api/v1/goals/?status=completed HTTP/1.1" 200 5105
 [28/Mar/2026 11:45:04] "GET /api/v1/goals/?status=rejected HTTP/1.1" 200 5105
 [28/Mar/2026 11:45:22] "GET /api/v1/goals/ HTTP/1.1" 200 5105
+[28/Mar/2026 11:51:40] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:40] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:41] "GET /api/v1/goals/1/ HTTP/1.1" 200 629
+[28/Mar/2026 11:51:41] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:42] "GET /api/v1/goals/1/ HTTP/1.1" 200 629
+[28/Mar/2026 11:51:42] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:42] "GET /api/v1/goals/ HTTP/1.1" 200 5105
+[28/Mar/2026 11:51:42] "GET /api/v1/goals/ HTTP/1.1" 200 5105
