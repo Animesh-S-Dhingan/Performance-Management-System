@@ -6,6 +6,8 @@ const Layout = ({ children }) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    
+    const isChatRoute = location.pathname.startsWith('/chat');
 
     const handleLogout = () => {
         logout();
@@ -17,19 +19,26 @@ const Layout = ({ children }) => {
             { name: 'Dashboard', path: '/' },
             { name: 'My Goals', path: '/goals' },
             { name: 'Feedback', path: '/feedback' },
+            { name: 'Chat', path: '/chat' },
         ],
         manager: [
             { name: 'Dashboard', path: '/' },
             { name: 'Team Goals', path: '/goals' },
+            { name: 'Probation', path: '/probation' },
+            { name: 'Review Cycles', path: '/cycles' },
             { name: 'Approvals', path: '/approvals' },
             { name: 'Feedback', path: '/feedback' },
+            { name: 'Chat', path: '/chat' },
         ],
         admin: [
             { name: 'Dashboard', path: '/' },
             { name: 'Org Goals', path: '/goals' },
+            { name: 'User Management', path: '/admin/users' },
             { name: 'Probation', path: '/probation' },
             { name: 'Review Cycles', path: '/cycles' },
+            { name: 'Reports', path: '/reports' },
             { name: 'Audit Logs', path: '/audit' },
+            { name: 'Chat', path: '/chat' },
             { name: 'Settings', path: '/admin-config' },
         ],
     };
@@ -119,13 +128,51 @@ const Layout = ({ children }) => {
                     backgroundColor: 'white'
                 }}>
                     {/* Header content: Role switch, Notifications bell */}
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        {/* Add notifications bell / role switch here if needed */}
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <Link to="/notifications" style={{ textDecoration: 'none', color: '#64748b', fontSize: '1.25rem', padding: '0.25rem' }}>
+                            🔔
+                        </Link>
                     </div>
                 </header>
 
                 {children}
             </main>
+
+            {/* Bouncing Floating AI Button */}
+            {!isChatRoute && (
+                <Link 
+                    to="/chat" 
+                    onClick={() => localStorage.setItem('autoOpenBot', 'true')}
+                    style={{
+                        position: 'fixed',
+                        bottom: '2rem',
+                        right: '2rem',
+                        padding: '1rem 1.5rem',
+                        backgroundColor: 'var(--primary)',
+                        color: 'white',
+                        borderRadius: '30px',
+                        boxShadow: '0 10px 15px -3px rgba(79,70,229,0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        textDecoration: 'none',
+                        fontWeight: 600,
+                        zIndex: 50,
+                        animation: 'float 3s ease-in-out infinite'
+                    }}
+                >
+                    <span style={{ fontSize: '1.5rem' }}>🧠</span>
+                    <span>Have a question? I am here!</span>
+                </Link>
+            )}
+            
+            <style>{`
+                @keyframes float {
+                    0% { transform: translateY(0px); }
+                    50% { transform: translateY(-10px); }
+                    100% { transform: translateY(0px); }
+                }
+            `}</style>
         </div>
     );
 };

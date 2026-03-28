@@ -3,6 +3,7 @@ Core models for the Performance & Goal Management Platform.
 """
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -13,7 +14,13 @@ class User(AbstractUser):
         MANAGER = 'manager', 'Manager'
         ADMIN = 'admin', 'Admin'
 
+    class ReviewTrack(models.TextChoices):
+        BIANNUAL = 'biannual', 'Bi-Annual'
+        QUARTERLY = 'quarterly', 'Quarterly'
+        BOTH = 'both', 'Both (Deduplicated)'
+
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.EMPLOYEE)
+    review_track = models.CharField(max_length=20, choices=ReviewTrack.choices, default=ReviewTrack.BIANNUAL)
     department = models.CharField(max_length=100, blank=True)
     date_of_joining = models.DateField(null=True, blank=True)
     evaluator = models.ForeignKey(
@@ -119,12 +126,25 @@ class Feedback(models.Model):
         MEMBER = 'member', 'Member Self-Review'
         EVALUATOR = 'evaluator', 'Evaluator Review'
 
-    goal = models.ForeignKey(Goal, on_delete=models.CASCADE, related_name='feedbacks')
+    goal = models.ForeignKey(Goal, on_delete=models.CASCADE, related_name='feedbacks', null=True, blank=True)
+    probation = models.ForeignKey('Probation', on_delete=models.CASCADE, related_name='feedbacks', null=True, blank=True)
     submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     feedback_type = models.CharField(max_length=20, choices=FeedbackType.choices)
     ratings = models.JSONField(default=dict, blank=True, help_text='Structured rating data (1-5 scale)')
     text = models.TextField(blank=True)
     is_draft = models.BooleanField(default=True)
+    
+    # Red Flag & Governance
+    sentiment_score = models.FloatField(null=True, blank=True)
+    is_red_flag = models.BooleanField(default=False)
+    flag_reason = models.TextField(blank=True)
+    admin_action_taken = models.BooleanField(default=False)
+    admin_comments = models.TextField(blank=True)
+    is_resolved = models.BooleanField(default=False)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    resolved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='resolved_flags')
+    flag_triggered_at = models.DateTimeField(null=True, blank=True)
+    
     submitted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -132,8 +152,50 @@ class Feedback(models.Model):
         unique_together = ['goal', 'feedback_type']
         ordering = ['-created_at']
 
+    def save(self, *args, **kwargs):
+        # Only process for red flags if submitted and not a draft
+        if not self.is_draft and not self.submitted_at:
+            from core.utils import analyze_sentiment
+            self.submitted_at = timezone.now()
+            
+            # 1. Sentiment Analysis
+            self.sentiment_score = analyze_sentiment(self.text)
+            
+            # 2. Red Flag Detection logic
+            flag_reasons = []
+            
+            # a. Low score threshold (<= 2)
+            if self.ratings:
+                for dim, score in self.ratings.items():
+                    if isinstance(score, (int, float)) and score <= 2:
+                        flag_reasons.append(f"Low rating in {dim} ({score})")
+            
+            # b. Negative sentiment (< -0.2)
+            if self.sentiment_score < -0.2:
+                flag_reasons.append(f"Negative sentiment ({self.sentiment_score})")
+            
+            # c. Blank text (Soft Flag)
+            if not self.text.strip():
+                flag_reasons.append("Blank feedback response")
+                
+            if flag_reasons:
+                self.is_red_flag = True
+                self.flag_reason = " | ".join(flag_reasons)
+                self.flag_triggered_at = timezone.now()
+
+        super().save(*args, **kwargs)
+        
+        # 3. Trigger notification for new flags
+        if self.is_red_flag and not self.is_draft and not self.admin_action_taken:
+            from core.utils import send_red_flag_notification
+            # Note: In a production app, use a post_save signal or task queue
+            # For this demo, we'll call it if not notified.
+            if not getattr(self, '_notified', False):
+                send_red_flag_notification(self)
+                self._notified = True
+
     def __str__(self):
-        return f"{self.get_feedback_type_display()} for {self.goal}"
+        return f"{self.get_feedback_type_display()} for {self.goal or self.probation}"
 
 
 class EvaluationDimension(models.Model):
@@ -208,10 +270,13 @@ class Probation(models.Model):
     start_date = models.DateField()
     day30_status = models.CharField(max_length=20, choices=MilestoneStatus.choices, default=MilestoneStatus.PENDING)
     day30_date = models.DateField(null=True, blank=True)
+    day30_triggered_at = models.DateTimeField(null=True, blank=True)
     day60_status = models.CharField(max_length=20, choices=MilestoneStatus.choices, default=MilestoneStatus.PENDING)
     day60_date = models.DateField(null=True, blank=True)
+    day60_triggered_at = models.DateTimeField(null=True, blank=True)
     day80_status = models.CharField(max_length=20, choices=MilestoneStatus.choices, default=MilestoneStatus.PENDING)
     day80_date = models.DateField(null=True, blank=True)
+    day80_triggered_at = models.DateTimeField(null=True, blank=True)
     is_paused = models.BooleanField(default=False)
     pause_reason = models.CharField(max_length=200, blank=True)
     revised_end_date = models.DateField(null=True, blank=True)
@@ -274,3 +339,21 @@ class AdminConfig(models.Model):
 
     def __str__(self):
         return self.key
+
+
+class ChatMessage(models.Model):
+    """WhatsApp-style chat messages with mentions, file, and voice support."""
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='received_messages')
+    text = models.TextField(blank=True)
+    file_attachment = models.FileField(upload_to='chat_files/', null=True, blank=True)
+    voice_note = models.FileField(upload_to='chat_voice/', null=True, blank=True)
+    is_bot = models.BooleanField(default=False)
+    reactions = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Message from {self.sender} to {self.receiver or 'Bot'}"

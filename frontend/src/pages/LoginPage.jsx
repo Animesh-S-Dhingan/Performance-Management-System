@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
@@ -32,10 +32,11 @@ const LoginPage = () => {
             minHeight: '100vh',
             backgroundColor: 'var(--bg-main)'
         }}>
-            <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
+            <div className="card" style={{ width: '100%', maxWidth: '420px' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>PMS Platform</h1>
-                    <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>Sign in to your account</p>
+                    <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🚀</div>
+                    <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: 'var(--primary)', margin: 0 }}>PMS Platform</h1>
+                    <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem', fontSize: '0.9rem' }}>Sign in to your account</p>
                 </div>
 
                 {error && (
@@ -60,13 +61,15 @@ const LoginPage = () => {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@company.com"
                             style={{
                                 width: '100%',
                                 padding: '0.625rem',
                                 borderRadius: '8px',
                                 border: '1px solid var(--border)',
                                 outline: 'none',
-                                transition: 'border-color 0.2s'
+                                transition: 'border-color 0.2s',
+                                boxSizing: 'border-box'
                             }}
                             onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
                             onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
@@ -80,13 +83,15 @@ const LoginPage = () => {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
                             style={{
                                 width: '100%',
                                 padding: '0.625rem',
                                 borderRadius: '8px',
                                 border: '1px solid var(--border)',
                                 outline: 'none',
-                                transition: 'border-color 0.2s'
+                                transition: 'border-color 0.2s',
+                                boxSizing: 'border-box'
                             }}
                             onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
                             onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
@@ -103,8 +108,22 @@ const LoginPage = () => {
                     </button>
                 </form>
 
-                <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                    Contact HR if you've forgotten your credentials.
+                {/* Sign Up link */}
+                <div style={{
+                    marginTop: '1.5rem',
+                    paddingTop: '1.5rem',
+                    borderTop: '1px solid var(--border)',
+                    textAlign: 'center',
+                    fontSize: '0.875rem',
+                    color: 'var(--text-muted)'
+                }}>
+                    Don't have an account?{' '}
+                    <Link
+                        to="/register"
+                        style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}
+                    >
+                        Create Account →
+                    </Link>
                 </div>
             </div>
         </div>

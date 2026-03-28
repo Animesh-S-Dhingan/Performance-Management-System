@@ -6,7 +6,21 @@ const GoalCard = ({ goal, onClick }) => {
     return (
         <div className="card" onClick={onClick} style={{ cursor: 'pointer', marginBottom: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>{goal.title}</h3>
+                <div>
+                    <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.25rem' }}>{goal.title}</h3>
+                    <span style={{ 
+                        fontSize: '0.625rem', 
+                        textTransform: 'uppercase', 
+                        letterSpacing: '0.05em', 
+                        padding: '2px 6px', 
+                        borderRadius: '4px', 
+                        backgroundColor: goal.entity === 'company' ? '#fee2e2' : goal.entity === 'team' ? '#e0f2fe' : '#f0fdf4',
+                        color: goal.entity === 'company' ? '#991b1b' : goal.entity === 'team' ? '#075985' : '#166534',
+                        fontWeight: 700
+                    }}>
+                        {goal.entity || 'Individual'}
+                    </span>
+                </div>
                 <StatusBadge status={goal.status} />
             </div>
 
