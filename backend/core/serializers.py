@@ -39,7 +39,7 @@ class GoalCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = GoalComment
         fields = ('id', 'goal', 'user', 'user_name', 'text', 'created_at')
-        read_only_fields = ('id', 'user', 'created_at')
+        read_only_fields = ('id', 'goal', 'user', 'created_at')
 
 class FeedbackSerializer(serializers.ModelSerializer):
     submitted_by_name = serializers.ReadOnlyField(source='submitted_by.get_full_name')
