@@ -55,7 +55,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = (
-            'id', 'goal', 'probation', 'submitted_by', 'submitted_by_name', 
+            'id', 'goal', 'probation', 'submitted_by', 'submitted_by_name', 'target_name',
             'feedback_type', 'ratings', 'text', 'is_draft', 'submitted_at',
             'sentiment_score', 'is_red_flag', 'flag_reason', 'admin_action_taken',
             'admin_comments', 'flag_triggered_at'
@@ -81,11 +81,39 @@ class GoalSerializer(serializers.ModelSerializer):
     parent_goal_title = serializers.ReadOnlyField(source='parent_goal.title')
     sub_goals = serializers.SerializerMethodField()
     comments = GoalCommentSerializer(many=True, read_only=True)
-    feedbacks = FeedbackSerializer(many=True, read_only=True)
+    feedbacks = serializers.SerializerMethodField()
     evaluation_ratings = EvaluationRatingSerializer(many=True, read_only=True)
 
     def get_sub_goals(self, obj):
         return [{"id": s.id, "title": s.title, "status": s.status, "target_completion": s.target_completion, "weightage": s.weightage} for s in obj.sub_goals.all()]
+
+    def get_feedbacks(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user:
+            return []
+            
+        user = request.user
+            
+        qs = obj.feedbacks.all()
+        if user.role == 'admin':
+            return FeedbackSerializer(qs, many=True).data
+            
+        # Cross-share logic
+        final_qs = []
+        for feedback in qs:
+            # Always see own feedback
+            if feedback.submitted_by == user:
+                final_qs.append(feedback)
+                continue
+                
+            # Check if both types exist for this goal to allow cross-viewing
+            has_member = obj.feedbacks.filter(feedback_type='member', is_draft=False).exists()
+            has_evaluator = obj.feedbacks.filter(feedback_type='evaluator', is_draft=False).exists()
+            
+            if has_member and has_evaluator:
+                final_qs.append(feedback)
+                
+        return FeedbackSerializer(final_qs, many=True).data
 
     class Meta:
         model = Goal

@@ -87,9 +87,33 @@ class GoalViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'admin':
-            return Goal.objects.all()
-        # Employee sees their goals; Manager sees their goals and reports' goals
-        return Goal.objects.filter(assigned_to=user) | Goal.objects.filter(evaluator=user) | Goal.objects.filter(assigned_to__evaluator=user)
+            qs = Goal.objects.all()
+        else:
+            # Employee sees their goals; Manager sees their goals and reports' goals
+            qs = Goal.objects.filter(Q(assigned_to=user) | Q(evaluator=user) | Q(assigned_to__evaluator=user))
+        
+        # Manual filtering from query params
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+            
+        assigned_to = self.request.query_params.get('assigned_to')
+        if assigned_to:
+            qs = qs.filter(assigned_to_id=assigned_to)
+            
+        evaluator = self.request.query_params.get('evaluator')
+        if evaluator:
+            qs = qs.filter(evaluator_id=evaluator)
+            
+        entity = self.request.query_params.get('entity')
+        if entity:
+            qs = qs.filter(entity=entity)
+            
+        priority = self.request.query_params.get('priority')
+        if priority:
+            qs = qs.filter(priority=priority)
+            
+        return qs.distinct()
 
     def perform_create(self, serializer):
         # Default to current user if not provided (e.g., employee creating own goal)
@@ -101,19 +125,23 @@ class GoalViewSet(viewsets.ModelViewSet):
     @decorators.action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def submit(self, request, pk=None):
         goal = self.get_object()
-        if goal.status not in [Goal.Status.DRAFT, Goal.Status.REJECTED]:
-            return Response({'error': 'Goal must be in Draft or Rejected state to submit.'}, status=status.HTTP_400_BAD_REQUEST)
+        if goal.status not in [Goal.Status.DRAFT, Goal.Status.REJECTED, Goal.Status.ACTIVE]:
+            return Response({'error': 'Goal must be in Draft, Rejected, or Active state to submit.'}, status=status.HTTP_400_BAD_REQUEST)
         
+        # Track if it was active before submitting for completion
+        was_active = goal.status == Goal.Status.ACTIVE
         goal.status = Goal.Status.PENDING
         goal.save()
         
         # Notify manager
         manager = goal.evaluator or goal.assigned_to.evaluator
         if manager:
+            msg = f"Goal '{goal.title}' submitted by {goal.assigned_to.get_full_name()} for "
+            msg += "completion approval." if was_active else "approval."
             Notification.objects.create(
                 user=manager,
                 notification_type=Notification.NotificationType.GOAL_SUBMITTED,
-                message=f"Goal '{goal.title}' submitted by {goal.assigned_to.get_full_name()} for approval.",
+                message=msg,
                 related_goal=goal
             )
         
@@ -126,17 +154,24 @@ class GoalViewSet(viewsets.ModelViewSet):
         if weightage is not None:
             goal.weightage = weightage
             
-        goal.status = Goal.Status.ACTIVE
+        # If the goal is 100% or was submitted from active, mark as completed
+        # Otherwise, move to active (initial approval)
+        if goal.target_completion >= 100:
+            goal.status = Goal.Status.COMPLETED
+        else:
+            # Default to active if it's a first-time approval
+            goal.status = Goal.Status.ACTIVE
+            
         goal.save()
         
         Notification.objects.create(
             user=goal.assigned_to,
             notification_type=Notification.NotificationType.GOAL_APPROVED,
-            message=f"Your goal '{goal.title}' has been approved with weightage {goal.weightage}%.",
+            message=f"Your goal '{goal.title}' has been approved and is now {goal.status}.",
             related_goal=goal
         )
-        send_slack_notification(f"✅ Goal Approved: {goal.title} ({goal.weightage}%) for {goal.assigned_to.first_name}")
-        return Response({'status': 'Goal approved', 'weightage': goal.weightage})
+        send_slack_notification(f"✅ Goal Approved: {goal.title} ({goal.weightage}%) for {goal.assigned_to.first_name} -> {goal.status}")
+        return Response({'status': f'Goal {goal.status}', 'weightage': goal.weightage})
 
     @decorators.action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated, CanApproveGoal])
     def reject(self, request, pk=None):
@@ -191,20 +226,31 @@ class FeedbackViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Feedback.objects.all()
-        
         if user.role == 'admin':
-            return qs
-
-        # Filter feedback related to user (as employee or manager)
-        qs = qs.filter(Q(goal__assigned_to=user) | Q(goal__evaluator=user) | Q(goal__assigned_to__evaluator=user))
+            qs = Feedback.objects.all()
+        else:
+            # Filter feedback related to user (as employee or manager)
+            qs = Feedback.objects.filter(Q(goal__assigned_to=user) | Q(goal__evaluator=user) | Q(goal__assigned_to__evaluator=user))
         
+        # Apply manual filters
+        goal_id = self.request.query_params.get('goal')
+        if goal_id:
+            qs = qs.filter(goal_id=goal_id)
+            
+        fb_type = self.request.query_params.get('feedback_type')
+        if fb_type:
+            qs = qs.filter(feedback_type=fb_type)
+
+        is_draft = self.request.query_params.get('is_draft')
+        if is_draft is not None:
+            qs = qs.filter(is_draft=is_draft.lower() == 'true')
+
         # Cross-share logic: Only show content if BOTH member and evaluator feedback exist for the goal
-        final_qs = []
+        final_qs_ids = []
         for feedback in qs:
             # If the user is the one who submitted it, they can always see it
             if feedback.submitted_by == user:
-                final_qs.append(feedback.id)
+                final_qs_ids.append(feedback.id)
                 continue
             
             # Check if both types exist for this goal
@@ -212,9 +258,9 @@ class FeedbackViewSet(viewsets.ModelViewSet):
             has_evaluator = Feedback.objects.filter(goal=feedback.goal, feedback_type='evaluator').exists()
             
             if has_member and has_evaluator:
-                final_qs.append(feedback.id)
+                final_qs_ids.append(feedback.id)
         
-        return Feedback.objects.filter(id__in=final_qs)
+        return Feedback.objects.filter(id__in=final_qs_ids).distinct()
 
     def perform_create(self, serializer):
         serializer.save(submitted_by=self.request.user)
@@ -256,6 +302,21 @@ class ReviewCycleViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewCycleSerializer
     permission_classes = [permissions.IsAuthenticated, IsManagerOrAdmin]
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'admin':
+            qs = ReviewCycle.objects.all()
+        else:
+            # Managers/Evaluators see their cycle and their direct reports' cycles
+            qs = ReviewCycle.objects.filter(Q(user=user) | Q(user__evaluator=user))
+        
+        # Filters
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+            
+        return qs.distinct()
+
 class ProbationViewSet(viewsets.ModelViewSet):
     queryset = Probation.objects.all()
     serializer_class = ProbationSerializer
@@ -264,9 +325,25 @@ class ProbationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'admin':
-            return Probation.objects.all()
-        # Managers see their reports' probation; Employees see their own
-        return Probation.objects.filter(Q(manager=user) | Q(user=user))
+            qs = Probation.objects.all()
+        else:
+            # Managers see their reports' probation; Employees see their own
+            qs = Probation.objects.filter(Q(manager=user) | Q(user=user))
+            
+        # Apply filters
+        status_30 = self.request.query_params.get('day30_status')
+        if status_30:
+            qs = qs.filter(day30_status=status_30)
+            
+        status_60 = self.request.query_params.get('day60_status')
+        if status_60:
+            qs = qs.filter(day60_status=status_60)
+            
+        status_80 = self.request.query_params.get('day80_status')
+        if status_80:
+            qs = qs.filter(day80_status=status_80)
+            
+        return qs.distinct()
 
     @decorators.action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated, IsAdmin])
     def pause(self, request, pk=None):

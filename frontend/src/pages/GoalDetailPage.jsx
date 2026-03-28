@@ -75,7 +75,7 @@ const GoalDetailPage = () => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    {goal.status === 'draft' && isOwner && (
+                    {(goal.status === 'draft' || goal.status === 'active') && isOwner && (
                         <button className="btn btn-primary" onClick={() => handleAction('submit')}>Submit for Approval</button>
                     )}
                     {canApprove && (
@@ -189,6 +189,38 @@ const GoalDetailPage = () => {
                             )}
                         </div>
                     </div>
+
+                    {goal.feedbacks?.length > 0 && (
+                        <div className="card" style={{ marginBottom: '2rem', border: '1px solid #ddd', backgroundColor: '#fcfcfc' }}>
+                            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1.5rem' }}>Performance Feedback</h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                {goal.feedbacks.map(fb => {
+                                    const ratingsArr = Object.values(fb.ratings || {});
+                                    const avg = ratingsArr.length > 0 ? (ratingsArr.reduce((a, b) => a + b, 0) / ratingsArr.length).toFixed(1) : '—';
+                                    return (
+                                        <div key={fb.id} style={{ paddingBottom: '1.5rem', borderBottom: '1px solid #eee' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                    <span style={{ fontSize: '0.8125rem', backgroundColor: fb.feedback_type === 'member' ? '#f0fdf4' : '#f0f9ff', color: fb.feedback_type === 'member' ? '#166534' : '#0369a1', padding: '4px 12px', borderRadius: '20px', fontWeight: 700, textTransform: 'uppercase' }}>
+                                                        {fb.feedback_type === 'member' ? 'Self Review' : 'Manager Review'}
+                                                    </span>
+                                                    <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{fb.submitted_by_name}</span>
+                                                </div>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>AVG RATING</div>
+                                                    <div style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--primary)' }}>{avg} / 5</div>
+                                                </div>
+                                            </div>
+                                            <div style={{ fontSize: '0.9375rem', lineHeight: 1.6, color: 'var(--text-main)', fontStyle: fb.is_draft ? 'italic' : 'normal' }}>
+                                                {fb.is_draft && <span style={{ color: 'var(--warning)', fontWeight: 600 }}>[DRAFT] </span>}
+                                                {fb.text}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="card">
                         <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1.5rem' }}>Discussion</h3>
