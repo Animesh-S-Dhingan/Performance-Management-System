@@ -9,6 +9,18 @@ const Layout = ({ children }) => {
     
     const isChatRoute = location.pathname.startsWith('/chat');
 
+    const getDashboardPath = (role) => {
+        switch (role) {
+          case 'admin':
+            return '/admin-dashboard';
+          case 'manager':
+            return '/team-dashboard';
+          default:
+            return '/dashboard';
+        }
+      };
+
+
     const handleLogout = () => {
         logout();
         navigate('/login');
@@ -16,13 +28,13 @@ const Layout = ({ children }) => {
 
     const navItemsByRole = {
         employee: [
-            { name: 'Dashboard', path: '/' },
+            { name: 'Dashboard', path: getDashboardPath(user?.role) },
             { name: 'My Goals', path: '/goals' },
             { name: 'Feedback', path: '/feedback' },
             { name: 'Chat', path: '/chat' },
         ],
         manager: [
-            { name: 'Dashboard', path: '/' },
+            { name: 'Dashboard', path: getDashboardPath(user?.role) },
             { name: 'Team Goals', path: '/goals' },
             { name: 'Probation', path: '/probation' },
             { name: 'Review Cycles', path: '/cycles' },
@@ -31,7 +43,7 @@ const Layout = ({ children }) => {
             { name: 'Chat', path: '/chat' },
         ],
         admin: [
-            { name: 'Dashboard', path: '/' },
+            { name: 'Dashboard', path: getDashboardPath(user?.role)},
             { name: 'Org Goals', path: '/goals' },
             { name: 'User Management', path: '/admin/users' },
             { name: 'Probation', path: '/probation' },
