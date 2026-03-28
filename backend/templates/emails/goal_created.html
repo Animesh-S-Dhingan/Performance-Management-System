@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Goal Assigned</title>
+</head>
+<body style="margin:0;padding:0;background:#f0f4f8;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f8;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 100%);padding:50px 40px;text-align:center;">
+              <div style="font-size:48px;margin-bottom:16px;">🎯</div>
+              <h1 style="color:#ffffff;margin:0;font-size:26px;font-weight:700;">New Goal Assigned!</h1>
+              <p style="color:rgba(255,255,255,0.85);margin:10px 0 0;font-size:15px;">Time to level up your performance</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+              <p style="color:#475569;font-size:16px;line-height:1.6;margin:0 0 28px;">
+                Hi <strong style="color:#1e293b;">{{ user.first_name }}</strong> 👋,<br><br>
+                A new goal has been assigned to you! Here are the details:
+              </p>
+
+              <!-- Goal card -->
+              <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:12px;padding:24px;margin-bottom:28px;">
+                <h2 style="color:#0369a1;font-size:20px;margin:0 0 16px;font-weight:700;">{{ goal.title }}</h2>
+
+                <table width="100%" cellpadding="0" cellspacing="6">
+                  <tr>
+                    <td style="color:#64748b;font-size:14px;width:130px;padding:5px 0;">📋 Description:</td>
+                    <td style="color:#1e293b;font-size:14px;padding:5px 0;">{{ goal.description|default:"No description provided." }}</td>
+                  </tr>
+                  <tr>
+                    <td style="color:#64748b;font-size:14px;padding:5px 0;">⚡ Priority:</td>
+                    <td style="padding:5px 0;">
+                      {% if goal.priority == 'critical' %}
+                        <span style="background:#fee2e2;color:#dc2626;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:600;">🔴 Critical</span>
+                      {% elif goal.priority == 'high' %}
+                        <span style="background:#fef3c7;color:#d97706;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:600;">🟡 High</span>
+                      {% elif goal.priority == 'medium' %}
+                        <span style="background:#dbeafe;color:#2563eb;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:600;">🔵 Medium</span>
+                      {% else %}
+                        <span style="background:#d1fae5;color:#059669;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:600;">🟢 Low</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color:#64748b;font-size:14px;padding:5px 0;">📅 Due Date:</td>
+                    <td style="color:#1e293b;font-size:14px;font-weight:600;padding:5px 0;">{{ goal.due_date|default:"Not set" }}</td>
+                  </tr>
+                  <tr>
+                    <td style="color:#64748b;font-size:14px;padding:5px 0;">🗓️ Period:</td>
+                    <td style="color:#1e293b;font-size:14px;padding:5px 0;">{{ goal.get_goal_period_display }}</td>
+                  </tr>
+                  <tr>
+                    <td style="color:#64748b;font-size:14px;padding:5px 0;">⚖️ Weightage:</td>
+                    <td style="color:#1e293b;font-size:14px;padding:5px 0;">{{ goal.weightage }}%</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Tips -->
+              <div style="background:#faf5ff;border-left:4px solid #8b5cf6;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:28px;">
+                <p style="margin:0;color:#6d28d9;font-size:14px;font-weight:600;">💡 Pro Tip</p>
+                <p style="margin:6px 0 0;color:#7c3aed;font-size:13px;line-height:1.6;">
+                  Break down your goal into smaller milestones and update your progress regularly. Consistency is the key to success!
+                </p>
+              </div>
+
+              <!-- CTA -->
+              <div style="text-align:center;margin-bottom:24px;">
+                <a href="http://localhost:5173/goals" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#ffffff;text-decoration:none;padding:14px 36px;border-radius:50px;font-size:15px;font-weight:600;display:inline-block;box-shadow:0 4px 15px rgba(14,165,233,0.35);">
+                  📊 View My Goals
+                </a>
+              </div>
+
+              <p style="color:#94a3b8;font-size:13px;text-align:center;margin:0;">
+                Good luck with your goal! We believe in you 🌟
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f8faff;border-top:1px solid #e2e8f0;padding:24px 40px;text-align:center;">
+              <p style="color:#94a3b8;font-size:13px;margin:0 0 4px;">© 2024 Performance Management System</p>
+              <p style="color:#cbd5e1;font-size:12px;margin:0;">Sent with ❤️ by the HR Team</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

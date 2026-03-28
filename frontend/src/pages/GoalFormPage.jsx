@@ -48,13 +48,30 @@ const GoalFormPage = ({ goalId, onSave, onCancel }) => {
         setError('');
 
         // Validation: Weightage must total 100% (simplified check for new/edit)
-        const newTotal = totalWeightage + parseFloat(formData.weightage);
+        // Calculating what the total would be AFTER this edit/addition
+        let currentTotalWithoutThisGoal = totalWeightage;
+        if (goalId) {
+            // If editing, we need to subtract the OLD weight of this goal
+            const oldGoal = (await client.get(`/goals/${goalId}/`)).data;
+            currentTotalWithoutThisGoal -= parseFloat(oldGoal.weightage || 0);
+        }
+
+        const newTotal = currentTotalWithoutThisGoal + parseFloat(formData.weightage || 0);
+        
         if (newTotal > 100) {
-            setError(`Total weightage would exceed 100% (Current: ${totalWeightage}%, New: ${formData.weightage}%)`);
+            setError(`Total weightage cannot exceed 100%! (Current Total without this goal: ${currentTotalWithoutThisGoal}%, Proposed: ${formData.weightage}%)`);
+            setLoading(false);
             return;
         }
 
-        setLoading(true);
+        // Optional: Warn if not 100
+        if (newTotal < 100) {
+             const proceed = window.confirm(`Total weightage is only ${newTotal}%. PRD requires 100% for approval. Save as Draft anyway?`);
+             if (!proceed) {
+                 setLoading(false);
+                 return;
+             }
+        }
         try {
             if (goalId) {
                 await client.put(`/goals/${goalId}/`, formData);
@@ -135,7 +152,7 @@ const GoalFormPage = ({ goalId, onSave, onCancel }) => {
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.25rem' }}>Weightage (%)</label>
+                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.25rem' }}>Proposed Weightage (%)</label>
                             <input
                                 type="number"
                                 min="0"
@@ -144,8 +161,8 @@ const GoalFormPage = ({ goalId, onSave, onCancel }) => {
                                 value={formData.weightage}
                                 onChange={(e) => setFormData({ ...formData, weightage: e.target.value })}
                             />
-                            <div style={{ fontSize: '0.75rem', color: totalWeightage + parseFloat(formData.weightage || 0) > 100 ? 'var(--danger)' : 'var(--text-muted)', marginTop: '0.25rem' }}>
-                                Current Total: {totalWeightage}%
+                            <div style={{ fontSize: '0.70rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                                Total: {totalWeightage + parseFloat(formData.weightage || 0)}% (Final weightage set by manager)
                             </div>
                         </div>
                         <div>

@@ -104,6 +104,58 @@ const GoalDetailPage = () => {
                 </div>
             )}
 
+            {/* Hierarchy Visualization */}
+            {(goal.parent_goal || (goal.sub_goals && goal.sub_goals.length > 0)) && (
+                <div className="card" style={{ marginBottom: '2rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}>
+                    <h3 style={{ fontSize: '0.875rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>Goal Hierarchy & Cascade</h3>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        {goal.parent_goal && (
+                            <div style={{ padding: '1rem', backgroundColor: 'white', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.5rem' }}>CASCADE FROM (PARENT)</div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <span style={{ fontSize: '1.25rem' }}>↑</span>
+                                    <button 
+                                        onClick={() => navigate(`/goals/${goal.parent_goal}`)}
+                                        style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 600, cursor: 'pointer', padding: 0, fontSize: '1rem', textAlign: 'left' }}
+                                    >
+                                        {goal.parent_goal_title}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {goal.sub_goals && goal.sub_goals.length > 0 && (
+                            <div style={{ padding: '1rem', backgroundColor: '#f1f5f9', borderRadius: '10px', border: '1px dashed #cbd5e1' }}>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '1rem' }}>ROLL-UP CONTRIBUTIONS (SUB-GOALS)</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                    {goal.sub_goals.map(sub => (
+                                        <div key={sub.id} style={{ padding: '0.75rem', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                <span style={{ color: '#94a3b8' }}>↳</span>
+                                                <button 
+                                                    onClick={() => navigate(`/goals/${sub.id}`)}
+                                                    style={{ background: 'none', border: 'none', color: 'var(--text-main)', fontWeight: 600, cursor: 'pointer', padding: 0, fontSize: '0.875rem', textAlign: 'left' }}
+                                                >
+                                                    {sub.title}
+                                                </button>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 700 }}>WEIGHT</div>
+                                                    <div style={{ fontSize: '0.875rem', fontWeight: 700 }}>{sub.weightage}%</div>
+                                                </div>
+                                                <StatusBadge status={sub.status} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
                 <section>
                     <div className="card" style={{ marginBottom: '2rem' }}>

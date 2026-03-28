@@ -1,22 +1,20 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import client from '../api/client';
 
-const AuthContext = createContext();
+// 1. Context ko export mat karo (internal rakho)
+const AuthContext = createContext(null);
 
+// 2. Provider Component
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const checkAuth = useCallback(async () => {
         const token = localStorage.getItem('token');
-        if (token) {
-            checkAuth();
-        } else {
+        if (!token) {
             setLoading(false);
+            return;
         }
-    }, []);
-
-    const checkAuth = async () => {
         try {
             const res = await client.get('/auth/me/');
             setUser(res.data);
@@ -26,13 +24,25 @@ export const AuthProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        checkAuth();
+    }, [checkAuth]);
 
     const login = async (email, password) => {
-        const res = await client.post('/token/', { username: email, password }); // Using username as email for simplicity in DRF
+        const res = await client.post('/token/', { username: email, password });
         const { access } = res.data;
         localStorage.setItem('token', access);
         await checkAuth();
+        return res.data;
+    };
+
+    const register = async (userData) => {
+        const res = await client.post('/auth/register/', userData);
+        const { access, user: registeredUser } = res.data;
+        localStorage.setItem('token', access);
+        setUser(registeredUser);
         return res.data;
     };
 
@@ -41,11 +51,28 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    // Value object ko memoize karne ki zaroorat nahi hai yahan but clean rakhte hain
+    const value = {
+        user,
+        login,
+        logout,
+        register,
+        loading,
+        checkAuth
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
-            {children}
+        <AuthContext.Provider value={value}>
+            {!loading && children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// 3. Hook ko export karo
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

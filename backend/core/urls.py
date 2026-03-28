@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     AuthViewSet, UserViewSet, GoalViewSet, FeedbackViewSet,
     EvaluationRatingViewSet, ReviewCycleViewSet, ProbationViewSet,
-    NotificationViewSet, AuditLogViewSet, AdminConfigViewSet
+    NotificationViewSet, AuditLogViewSet, AdminConfigViewSet,
+    ChatMessageViewSet
 )
 
 router = DefaultRouter()
@@ -17,6 +18,7 @@ router.register(r'probation', ProbationViewSet)
 router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'audit', AuditLogViewSet)
 router.register(r'admin-config', AdminConfigViewSet)
+router.register(r'chat', ChatMessageViewSet, basename='chat')
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,

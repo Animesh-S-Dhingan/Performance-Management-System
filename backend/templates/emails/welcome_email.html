@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to PMS Platform</title>
+</head>
+<body style="margin:0;padding:0;background:#f0f4f8;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f8;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#06b6d4 100%);padding:50px 40px;text-align:center;">
+              <div style="width:70px;height:70px;background:rgba(255,255,255,0.2);border-radius:50%;margin:0 auto 20px;display:table-cell;vertical-align:middle;text-align:center;font-size:32px;line-height:70px;width:70px;">🚀</div>
+              <h1 style="color:#ffffff;margin:0;font-size:28px;font-weight:700;letter-spacing:-0.5px;">Welcome to PMS Platform!</h1>
+              <p style="color:rgba(255,255,255,0.85);margin:10px 0 0;font-size:16px;">Your Performance & Goal Management Hub</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+              <h2 style="color:#1e293b;font-size:22px;margin:0 0 8px;">Hi {{ user.first_name }} 👋</h2>
+              <p style="color:#475569;font-size:16px;line-height:1.6;margin:0 0 24px;">
+                We're thrilled to have you on board! Your account has been successfully created on the <strong style="color:#6366f1;">Performance & Goal Management Platform</strong>.
+              </p>
+
+              <!-- Role Badge -->
+              <div style="background:#f8faff;border:1px solid #e0e7ff;border-radius:10px;padding:20px;margin-bottom:28px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td>
+                      <p style="margin:0;color:#6b7280;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Your Account Details</p>
+                    </td>
+                  </tr>
+                  <tr><td style="padding-top:12px;">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding:4px 0;color:#475569;font-size:14px;width:120px;">👤 Name:</td>
+                        <td style="padding:4px 0;color:#1e293b;font-size:14px;font-weight:600;">{{ user.get_full_name }}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:4px 0;color:#475569;font-size:14px;">📧 Email:</td>
+                        <td style="padding:4px 0;color:#1e293b;font-size:14px;font-weight:600;">{{ user.email }}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:4px 0;color:#475569;font-size:14px;">🎯 Role:</td>
+                        <td style="padding:4px 0;">
+                          <span style="background:#e0e7ff;color:#6366f1;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:600;text-transform:capitalize;">{{ user.role }}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td></tr>
+                </table>
+              </div>
+
+              <!-- What you can do -->
+              <h3 style="color:#1e293b;font-size:16px;margin:0 0 14px;">What you can do now:</h3>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:8px 0;">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="width:32px;vertical-align:top;padding-top:2px;">✅</td>
+                        <td style="color:#475569;font-size:15px;line-height:1.5;">Set and track your <strong>personal goals</strong> with KPIs</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="width:32px;vertical-align:top;padding-top:2px;">📊</td>
+                        <td style="color:#475569;font-size:15px;line-height:1.5;">Monitor your <strong>performance progress</strong> in real-time</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="width:32px;vertical-align:top;padding-top:2px;">💬</td>
+                        <td style="color:#475569;font-size:15px;line-height:1.5;">Receive <strong>feedback</strong> from managers and peers</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="width:32px;vertical-align:top;padding-top:2px;">🔔</td>
+                        <td style="color:#475569;font-size:15px;line-height:1.5;">Get <strong>real-time notifications</strong> on goal approvals and reviews</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA Button -->
+              <div style="text-align:center;margin:36px 0 28px;">
+                <a href="http://localhost:5173" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:50px;font-size:16px;font-weight:600;display:inline-block;box-shadow:0 4px 15px rgba(99,102,241,0.35);">
+                  🚀 Get Started Now
+                </a>
+              </div>
+
+              <p style="color:#94a3b8;font-size:13px;text-align:center;margin:0;">
+                If you didn't create this account, please contact HR immediately.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f8faff;border-top:1px solid #e2e8f0;padding:24px 40px;text-align:center;">
+              <p style="color:#94a3b8;font-size:13px;margin:0 0 4px;">© 2024 Performance Management System</p>
+              <p style="color:#cbd5e1;font-size:12px;margin:0;">Sent with ❤️ by the HR Team</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
