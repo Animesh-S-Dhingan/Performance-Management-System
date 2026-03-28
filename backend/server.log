@@ -3,41 +3,138 @@ Watching for file changes with StatReloader
 Performing system checks...
 
 System check identified no issues (0 silenced).
-March 28, 2026 - 00:51:17
+March 28, 2026 - 11:28:57
 Django version 4.2.20, using settings 'gms.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
 
-[28/Mar/2026 00:54:07] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
-[28/Mar/2026 00:54:07] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
-[28/Mar/2026 00:54:07] "GET /api/v1/goals/1/ HTTP/1.1" 200 484
-[28/Mar/2026 00:54:07] "GET /api/v1/goals/1/ HTTP/1.1" 200 484
+[28/Mar/2026 11:29:03] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:29:03] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:29:03] "GET /api/v1/goals/6/ HTTP/1.1" 200 671
+[28/Mar/2026 11:29:03] "GET /api/v1/goals/6/ HTTP/1.1" 200 671
+Unauthorized: /api/v1/goals/6/comments/
+[28/Mar/2026 11:29:21] "OPTIONS /api/v1/goals/6/comments/ HTTP/1.1" 401 58
+Unauthorized: /api/v1/goals/6/comments/
+[28/Mar/2026 11:29:21] "POST /api/v1/goals/6/comments/ HTTP/1.1" 401 58
+Unauthorized: /api/v1/goals/6/comments/
+[28/Mar/2026 11:30:36] "HEAD /api/v1/goals/6/comments/ HTTP/1.1" 401 0
+[28/Mar/2026 11:32:36] "POST /api/v1/token/ HTTP/1.1" 200 483
+[28/Mar/2026 11:32:36] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+/home/opstree/.local/lib/python3.10/site-packages/rest_framework/pagination.py:208: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'core.models.AdminConfig'> QuerySet.
+  paginator = self.django_paginator_class(queryset, page_size)
+[28/Mar/2026 11:32:36] "GET /api/v1/admin-config/ HTTP/1.1" 200 190
+[28/Mar/2026 11:32:36] "GET /api/v1/admin-config/ HTTP/1.1" 200 190
+[28/Mar/2026 11:33:00] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:33:00] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:33:00] "GET /api/v1/goals/6/ HTTP/1.1" 200 671
+[28/Mar/2026 11:33:00] "GET /api/v1/goals/6/ HTTP/1.1" 200 671
+[28/Mar/2026 11:33:18] "POST /api/v1/goals/6/progress/ HTTP/1.1" 200 53
+[28/Mar/2026 11:33:18] "GET /api/v1/goals/6/ HTTP/1.1" 200 671
+Bad Request: /api/v1/goals/6/comments/
+[28/Mar/2026 11:33:37] "POST /api/v1/goals/6/comments/ HTTP/1.1" 400 36
+Bad Request: /api/v1/goals/6/comments/
+[28/Mar/2026 11:34:20] "POST /api/v1/goals/6/comments/ HTTP/1.1" 400 36
+Bad Request: /api/v1/goals/6/comments/
+[28/Mar/2026 11:34:21] "POST /api/v1/goals/6/comments/ HTTP/1.1" 400 36
+Bad Request: /api/v1/goals/6/comments/
+[28/Mar/2026 11:34:22] "POST /api/v1/goals/6/comments/ HTTP/1.1" 400 36
+[28/Mar/2026 11:34:36] "POST /api/v1/goals/6/progress/ HTTP/1.1" 200 53
+[28/Mar/2026 11:34:36] "GET /api/v1/goals/6/ HTTP/1.1" 200 671
+[28/Mar/2026 11:34:55] "POST /api/v1/goals/6/progress/ HTTP/1.1" 200 52
+[28/Mar/2026 11:34:55] "GET /api/v1/goals/6/ HTTP/1.1" 200 670
+Bad Request: /api/v1/goals/6/comments/
+[28/Mar/2026 11:35:25] "POST /api/v1/goals/6/comments/ HTTP/1.1" 400 36
+Unauthorized: /api/v1/goals/6/progress/
+[28/Mar/2026 11:36:30] "POST /api/v1/goals/6/progress/ HTTP/1.1" 401 183
+[28/Mar/2026 11:36:56] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:36:56] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:36:56] "GET /api/v1/goals/6/ HTTP/1.1" 200 670
+[28/Mar/2026 11:36:56] "GET /api/v1/goals/6/ HTTP/1.1" 200 670
+[28/Mar/2026 11:37:08] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:37:08] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:37:08] "GET /api/v1/goals/1/ HTTP/1.1" 200 500
+[28/Mar/2026 11:37:08] "GET /api/v1/goals/1/ HTTP/1.1" 200 500
 Bad Request: /api/v1/goals/1/comments/
-[28/Mar/2026 00:54:15] "POST /api/v1/goals/1/comments/ HTTP/1.1" 400 36
-[28/Mar/2026 00:54:24] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 52
-[28/Mar/2026 00:54:24] "GET /api/v1/goals/1/ HTTP/1.1" 200 484
-[28/Mar/2026 00:54:28] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 53
-[28/Mar/2026 00:54:28] "GET /api/v1/goals/1/ HTTP/1.1" 200 485
-[28/Mar/2026 00:54:39] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 53
-[28/Mar/2026 00:54:39] "GET /api/v1/goals/1/ HTTP/1.1" 200 485
-[28/Mar/2026 00:54:47] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:54:47] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:55:55] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:55:55] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:56:29] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:56:29] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:56:31] "GET /api/v1/goals/?status=draft HTTP/1.1" 200 537
-[28/Mar/2026 00:56:32] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 537
-[28/Mar/2026 00:56:33] "GET /api/v1/goals/?status=active HTTP/1.1" 200 537
-[28/Mar/2026 00:56:33] "GET /api/v1/goals/?status=completed HTTP/1.1" 200 537
-[28/Mar/2026 00:56:34] "GET /api/v1/goals/?status=rejected HTTP/1.1" 200 537
-[28/Mar/2026 00:56:36] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:56:38] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:56:38] "GET /api/v1/goals/ HTTP/1.1" 200 537
-[28/Mar/2026 00:57:21] "POST /api/v1/goals/ HTTP/1.1" 201 464
-[28/Mar/2026 00:57:22] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
-[28/Mar/2026 00:57:22] "GET /api/v1/auth/me/ HTTP/1.1" 200 172
-[28/Mar/2026 00:57:22] "GET /api/v1/goals/ HTTP/1.1" 200 1002
-[28/Mar/2026 00:57:22] "GET /api/v1/goals/ HTTP/1.1" 200 1002
-[28/Mar/2026 00:57:25] "GET /api/v1/goals/2/ HTTP/1.1" 200 464
-[28/Mar/2026 00:57:25] "GET /api/v1/goals/2/ HTTP/1.1" 200 464
+[28/Mar/2026 11:37:27] "POST /api/v1/goals/1/comments/ HTTP/1.1" 400 36
+[28/Mar/2026 11:37:50] "POST /api/v1/goals/1/progress/ HTTP/1.1" 200 52
+[28/Mar/2026 11:37:50] "GET /api/v1/goals/1/ HTTP/1.1" 200 499
+Bad Request: /api/v1/goals/1/comments/
+[28/Mar/2026 11:38:06] "POST /api/v1/goals/1/comments/ HTTP/1.1" 400 36
+/home/opstree/Documents/PMS/Performance-Management-System/backend/core/serializers.py changed, reloading.
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 28, 2026 - 11:38:16
+Django version 4.2.20, using settings 'gms.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+[28/Mar/2026 11:38:52] "POST /api/v1/goals/1/comments/ HTTP/1.1" 201 130
+[28/Mar/2026 11:38:52] "GET /api/v1/goals/1/ HTTP/1.1" 200 629
+[28/Mar/2026 11:39:14] "POST /api/v1/goals/6/comments/ HTTP/1.1" 201 123
+[28/Mar/2026 11:39:14] "GET /api/v1/goals/6/ HTTP/1.1" 200 793
+[28/Mar/2026 11:39:20] "POST /api/v1/goals/6/progress/ HTTP/1.1" 200 52
+[28/Mar/2026 11:39:20] "GET /api/v1/goals/6/ HTTP/1.1" 200 793
+[28/Mar/2026 11:39:28] "POST /api/v1/goals/6/comments/ HTTP/1.1" 201 125
+[28/Mar/2026 11:39:28] "GET /api/v1/goals/6/ HTTP/1.1" 200 919
+[28/Mar/2026 11:40:54] "POST /api/v1/token/ HTTP/1.1" 200 483
+[28/Mar/2026 11:40:54] "GET /api/v1/auth/me/ HTTP/1.1" 200 205
+Forbidden: /api/v1/users/
+[28/Mar/2026 11:40:55] "GET /api/v1/users/ HTTP/1.1" 403 63
+Forbidden: /api/v1/users/
+[28/Mar/2026 11:40:55] "GET /api/v1/users/ HTTP/1.1" 403 63
+[28/Mar/2026 11:40:55] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 2465
+[28/Mar/2026 11:40:55] "GET /api/v1/goals/ HTTP/1.1" 200 2465
+[28/Mar/2026 11:40:55] "GET /api/v1/goals/ HTTP/1.1" 200 2465
+[28/Mar/2026 11:40:55] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 2465
+[28/Mar/2026 11:40:58] "GET /api/v1/goals/ HTTP/1.1" 200 2465
+[28/Mar/2026 11:40:58] "GET /api/v1/goals/ HTTP/1.1" 200 2465
+[28/Mar/2026 11:41:02] "GET /api/v1/goals/7/ HTTP/1.1" 200 721
+[28/Mar/2026 11:41:02] "GET /api/v1/goals/7/ HTTP/1.1" 200 721
+[28/Mar/2026 11:41:09] "POST /api/v1/goals/7/comments/ HTTP/1.1" 201 121
+[28/Mar/2026 11:41:09] "GET /api/v1/goals/7/ HTTP/1.1" 200 842
+Forbidden: /api/v1/users/
+[28/Mar/2026 11:41:30] "GET /api/v1/users/ HTTP/1.1" 403 63
+Forbidden: /api/v1/users/
+[28/Mar/2026 11:41:30] "GET /api/v1/users/ HTTP/1.1" 403 63
+[28/Mar/2026 11:41:30] "GET /api/v1/goals/ HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:30] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:30] "GET /api/v1/goals/ HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:30] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:38] "GET /api/v1/notifications/ HTTP/1.1" 200 271
+[28/Mar/2026 11:41:38] "GET /api/v1/goals/ HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:38] "GET /api/v1/notifications/ HTTP/1.1" 200 271
+[28/Mar/2026 11:41:38] "GET /api/v1/goals/ HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:49] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 2586
+[28/Mar/2026 11:41:49] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 2586
+Forbidden: /api/v1/goals/7/approve/
+[28/Mar/2026 11:42:24] "POST /api/v1/goals/7/approve/ HTTP/1.1" 403 63
+[28/Mar/2026 11:42:52] "POST /api/v1/token/ HTTP/1.1" 200 483
+[28/Mar/2026 11:42:52] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+/home/opstree/.local/lib/python3.10/site-packages/rest_framework/pagination.py:208: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'core.models.AdminConfig'> QuerySet.
+  paginator = self.django_paginator_class(queryset, page_size)
+[28/Mar/2026 11:42:52] "GET /api/v1/admin-config/ HTTP/1.1" 200 190
+[28/Mar/2026 11:42:52] "GET /api/v1/admin-config/ HTTP/1.1" 200 190
+[28/Mar/2026 11:44:40] "GET /api/v1/users/ HTTP/1.1" 200 1626
+[28/Mar/2026 11:44:40] "GET /api/v1/chat/ HTTP/1.1" 200 920
+[28/Mar/2026 11:44:40] "GET /api/v1/chat/ HTTP/1.1" 200 920
+[28/Mar/2026 11:44:40] "GET /api/v1/users/ HTTP/1.1" 200 1626
+[28/Mar/2026 11:44:46] "GET /api/v1/admin-config/ HTTP/1.1" 200 190
+[28/Mar/2026 11:44:46] "GET /api/v1/admin-config/ HTTP/1.1" 200 190
+[28/Mar/2026 11:44:46] "GET /api/v1/goals/ HTTP/1.1" 200 5105
+[28/Mar/2026 11:44:47] "GET /api/v1/goals/ HTTP/1.1" 200 5105
+[28/Mar/2026 11:45:01] "GET /api/v1/goals/?status=draft HTTP/1.1" 200 5105
+[28/Mar/2026 11:45:02] "GET /api/v1/goals/?status=pending HTTP/1.1" 200 5105
+[28/Mar/2026 11:45:03] "GET /api/v1/goals/?status=active HTTP/1.1" 200 5105
+[28/Mar/2026 11:45:03] "GET /api/v1/goals/?status=completed HTTP/1.1" 200 5105
+[28/Mar/2026 11:45:04] "GET /api/v1/goals/?status=rejected HTTP/1.1" 200 5105
+[28/Mar/2026 11:45:22] "GET /api/v1/goals/ HTTP/1.1" 200 5105
+[28/Mar/2026 11:51:40] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:40] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:41] "GET /api/v1/goals/1/ HTTP/1.1" 200 629
+[28/Mar/2026 11:51:41] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:42] "GET /api/v1/goals/1/ HTTP/1.1" 200 629
+[28/Mar/2026 11:51:42] "GET /api/v1/auth/me/ HTTP/1.1" 200 198
+[28/Mar/2026 11:51:42] "GET /api/v1/goals/ HTTP/1.1" 200 5105
+[28/Mar/2026 11:51:42] "GET /api/v1/goals/ HTTP/1.1" 200 5105
